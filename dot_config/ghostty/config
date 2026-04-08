@@ -1,0 +1,39 @@
+font-size = 13
+font-family = Maple Mono NF CN
+font-feature = zero
+font-feature = ss02
+font-feature = cv19
+font-feature = cv20
+
+clipboard-read = allow
+clipboard-write = allow
+copy-on-select = false
+
+background-opacity = 0.75
+background-blur-radius = 30
+theme = tokyonight
+
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+window-decoration = true
+window-save-state = always
+window-padding-balance = true
+window-colorspace = "display-p3"
+quit-after-last-window-closed = true
+macos-titlebar-style = tabs
+macos-option-as-alt = true
+adjust-cell-height = 20%
+
+shell-integration-features = no-cursor
+cursor-style = block
+
+# 光标轨迹特效相关文件
+custom-shader = "~/.config/ghostty/shaders/cursor_smear.glsl"
+# Cool Shader
+# custom-shader = shaders/glow.glsl
+# custom-shader = "~/.config/ghostty/shaders/bettercrt.glsl"
+# custom-shader = "~/.config/ghostty/shaders/water.glsl"
+# custom-shader = "~/.config/ghostty/shaders/bloom.glsl"
+
+keybind = shift+enter=text:\n
+keybind = global:ctrl+grave_accent=toggle_quick_terminal

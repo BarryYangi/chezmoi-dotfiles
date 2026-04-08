@@ -1,0 +1,69 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "agent_servers": {
+    "codex-acp": {
+      "favorite_config_option_values": {
+        "reasoning_effort": [
+          "high"
+        ]
+      },
+      "type": "registry"
+    },
+    "claude-acp": {
+      "favorite_config_option_values": {
+        "mode": [
+          "bypassPermissions"
+        ]
+      },
+      "type": "registry"
+    }
+  },
+  "agent_buffer_font_size": 16.0,
+  "ui_font_weight": 400.0,
+  "icon_theme": "Material Icon Theme",
+  "agent": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-4o",
+    },
+  },
+  "ui_font_size": 14.0,
+  "buffer_font_size": 16,
+  "theme": {
+    "mode": "dark",
+    "light": "Catppuccin Frappé (Blur)",
+    "dark": "Fleet Dark",
+  },
+  "vim_mode": true,
+  "autosave": "on_focus_change",
+  "format_on_save": "off",
+  "ui_font_family": "Annotation Mono",
+  "ui_font_fallbacks": [
+    "Maple Mono NF",
+    "霞鹜文楷等宽 屏幕阅读版",
+    "霞鹜文楷 屏幕阅读版 R"
+  ],
+  "buffer_font_family": "Annotation Mono",
+  "buffer_font_fallbacks": [
+    "Maple Mono NF",
+    "霞鹜文楷等宽 屏幕阅读版",
+    "霞鹜文楷 屏幕阅读版 R"
+  ],
+  "buffer_font_weight": 400,
+  "buffer_line_height": {
+    "custom": 1.45,
+  },
+  "terminal": {
+    "font_family": "Annotation Mono",
+    "font_size": 14,
+    "line_height": "standard",
+    "blinking": "on",
+  },
+}
