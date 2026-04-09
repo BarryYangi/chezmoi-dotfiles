@@ -7,38 +7,78 @@ set -e
 # Use: Space to toggle, Enter to confirm
 # ============================================
 
-OPTIONS=(
-  "Shell        oh-my-zsh + spaceship + plugins + eza/zoxide/fzf"
-  "Terminals    Ghostty, Kitty, WezTerm"
-  "Editors      Neovim, Zed, VS Code, Cursor"
-  "CLI Tools    Yazi, Zellij, Fastfetch, Btop"
-  "Runtime      nvm, Bun"
+LABELS=(
+  # Shell
+  "oh-my-zsh       Shell framework + spaceship prompt + plugins"
+  "eza             Modern ls replacement"
+  "zoxide          Smart cd (z command)"
+  "fzf             Fuzzy finder"
+  "hub             GitHub CLI wrapper"
+  "diff-so-fancy   Better git diff"
+  # Terminal Emulators
+  "Ghostty         GPU-accelerated terminal"
+  "Kitty           GPU-based terminal"
+  "WezTerm         Lua-configurable terminal"
+  # Editors
+  "Neovim          Hyperextensible Vim"
+  "Zed             High-performance editor"
+  "VS Code         Visual Studio Code"
+  "Cursor          AI-powered code editor"
+  # CLI Tools
+  "Yazi            Terminal file manager"
+  "Zellij          Terminal multiplexer"
+  "Fastfetch       System info display"
+  "Btop            System monitor"
+  # Runtime
+  "nvm             Node version manager"
+  "Bun             Fast JS runtime"
 )
 
 SELECTED=()
-for i in "${!OPTIONS[@]}"; do
+for i in "${!LABELS[@]}"; do
   SELECTED[$i]=true
 done
 
 CURSOR=0
+TOTAL=${#LABELS[@]}
+
+# Section headers (index -> header)
+declare -A HEADERS
+HEADERS[0]="── Shell ──────────────────────────────────────────"
+HEADERS[6]="── Terminal Emulators ─────────────────────────────"
+HEADERS[9]="── Editors ────────────────────────────────────────"
+HEADERS[13]="── CLI Tools ──────────────────────────────────────"
+HEADERS[17]="── Runtime ────────────────────────────────────────"
+
+count_lines() {
+  local lines=$((TOTAL + 3)) # items + header/footer padding
+  for key in "${!HEADERS[@]}"; do
+    ((lines++))
+  done
+  echo "$lines"
+}
 
 draw_menu() {
-  # Move cursor up to redraw
   if [ "$1" = "redraw" ]; then
-    printf "\033[%dA" $((${#OPTIONS[@]} + 2))
+    printf "\033[%dA" "$(count_lines)"
   fi
 
   echo ""
-  for i in "${!OPTIONS[@]}"; do
+  for i in "${!LABELS[@]}"; do
+    # Print section header
+    if [ -n "${HEADERS[$i]}" ]; then
+      printf "  \033[2m%s\033[0m\n" "${HEADERS[$i]}"
+    fi
+
     local marker=" "
     [ "${SELECTED[$i]}" = true ] && marker="●"
     local prefix="  "
     [ "$i" -eq "$CURSOR" ] && prefix="▸ "
 
     if [ "$i" -eq "$CURSOR" ]; then
-      printf "\033[1m%s[%s] %s\033[0m\n" "$prefix" "$marker" "${OPTIONS[$i]}"
+      printf "\033[1m%s[%s] %s\033[0m\n" "$prefix" "$marker" "${LABELS[$i]}"
     else
-      printf "%s[%s] %s\n" "$prefix" "$marker" "${OPTIONS[$i]}"
+      printf "%s[%s] %s\n" "$prefix" "$marker" "${LABELS[$i]}"
     fi
   done
   echo ""
@@ -46,9 +86,7 @@ draw_menu() {
 }
 
 select_packages() {
-  # Hide cursor
   printf "\033[?25l"
-  # Restore cursor on exit
   trap 'printf "\033[?25h"' EXIT
 
   echo ""
@@ -60,23 +98,15 @@ select_packages() {
   draw_menu
 
   while true; do
-    # Read single keypress
     IFS= read -rsn1 key
-
     case "$key" in
-      # Arrow keys (escape sequences)
       $'\x1b')
         read -rsn2 seq
         case "$seq" in
-          '[A') # Up
-            ((CURSOR > 0)) && ((CURSOR--))
-            ;;
-          '[B') # Down
-            ((CURSOR < ${#OPTIONS[@]} - 1)) && ((CURSOR++))
-            ;;
+          '[A') ((CURSOR > 0)) && ((CURSOR--)) ;;
+          '[B') ((CURSOR < TOTAL - 1)) && ((CURSOR++)) ;;
         esac
         ;;
-      # Space - toggle
       ' ')
         if [ "${SELECTED[$CURSOR]}" = true ]; then
           SELECTED[$CURSOR]=false
@@ -84,24 +114,19 @@ select_packages() {
           SELECTED[$CURSOR]=true
         fi
         ;;
-      # Enter - confirm
       '')
         break
         ;;
-      # 'a' - select all
       'a'|'A')
-        for i in "${!OPTIONS[@]}"; do SELECTED[$i]=true; done
+        for i in "${!LABELS[@]}"; do SELECTED[$i]=true; done
         ;;
-      # 'n' - select none
       'n'|'N')
-        for i in "${!OPTIONS[@]}"; do SELECTED[$i]=false; done
+        for i in "${!LABELS[@]}"; do SELECTED[$i]=false; done
         ;;
     esac
-
     draw_menu "redraw"
   done
 
-  # Show cursor again
   printf "\033[?25h"
   echo ""
 }
@@ -110,23 +135,16 @@ select_packages() {
 # Install functions
 # ============================================
 install_brew() {
-  for pkg in "$@"; do
-    echo "  brew install $pkg"
-    brew install "$pkg" 2>/dev/null || true
-  done
+  echo "  brew install $1"
+  brew install "$1" 2>/dev/null || true
 }
 
 install_cask() {
-  for pkg in "$@"; do
-    echo "  brew install --cask $pkg"
-    brew install --cask "$pkg" 2>/dev/null || true
-  done
+  echo "  brew install --cask $1"
+  brew install --cask "$1" 2>/dev/null || true
 }
 
-install_shell() {
-  echo ""
-  echo "Installing Shell..."
-
+install_omz() {
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "  Installing oh-my-zsh..."
     RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -149,56 +167,53 @@ install_shell() {
   [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] && \
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
       "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-
-  install_brew eza zoxide fzf hub diff-so-fancy
 }
 
-install_terminals() {
-  echo ""
-  echo "Installing Terminal Emulators..."
-  install_cask ghostty kitty wezterm
-}
-
-install_editors() {
-  echo ""
-  echo "Installing Editors..."
-  install_brew neovim
-  install_cask zed visual-studio-code cursor
-}
-
-install_cli_tools() {
-  echo ""
-  echo "Installing CLI Tools..."
-  install_brew yazi fastfetch btop zellij
-}
-
-install_runtime() {
-  echo ""
-  echo "Installing Runtime..."
-  install_brew nvm bun
+# Map index -> install command
+do_install() {
+  local i=$1
+  case $i in
+    0)  install_omz ;;
+    1)  install_brew eza ;;
+    2)  install_brew zoxide ;;
+    3)  install_brew fzf ;;
+    4)  install_brew hub ;;
+    5)  install_brew diff-so-fancy ;;
+    6)  install_cask ghostty ;;
+    7)  install_cask kitty ;;
+    8)  install_cask wezterm ;;
+    9)  install_brew neovim ;;
+    10) install_cask zed ;;
+    11) install_cask visual-studio-code ;;
+    12) install_cask cursor ;;
+    13) install_brew yazi ;;
+    14) install_brew zellij ;;
+    15) install_brew fastfetch ;;
+    16) install_brew btop ;;
+    17) install_brew nvm ;;
+    18) install_brew bun ;;
+  esac
 }
 
 # ============================================
 # Main
 # ============================================
 
-# Homebrew is always required
 if ! command -v brew &>/dev/null; then
   echo "Homebrew is required. Installing..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# Show interactive menu
 select_packages
 
-# Install selected components
-INSTALLERS=(install_shell install_terminals install_editors install_cli_tools install_runtime)
-INSTALLED=0
+echo ""
+echo "Installing selected components..."
 
-for i in "${!INSTALLERS[@]}"; do
+INSTALLED=0
+for i in "${!LABELS[@]}"; do
   if [ "${SELECTED[$i]}" = true ]; then
-    ${INSTALLERS[$i]}
+    do_install "$i"
     ((INSTALLED++))
   fi
 done
