@@ -227,22 +227,8 @@ do_install() {
     14) install_pkg zellij ;;
     15) install_pkg fastfetch ;;
     16) install_pkg btop ;;
-    17) # nvm
-      if [ "$USE_BREW" = true ]; then
-        brew install nvm 2>/dev/null || true
-      else
-        echo "  Installing nvm..."
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash 2>/dev/null || true
-      fi
-      ;;
-    18) # bun
-      if [ "$USE_BREW" = true ]; then
-        brew install bun 2>/dev/null || true
-      else
-        echo "  Installing bun..."
-        curl -fsSL https://bun.sh/install | bash 2>/dev/null || true
-      fi
-      ;;
+    17) install_pkg nvm ;;
+    18) install_pkg bun ;;
   esac
 }
 
@@ -292,38 +278,18 @@ for cmd in curl git; do
 done
 
 # Package manager setup
-if [ "$OS" = "Darwin" ]; then
-  # macOS: always use Homebrew
-  if ! command -v brew &>/dev/null; then
-    echo "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if command -v brew &>/dev/null; then
+  USE_BREW=true
+else
+  # Homebrew not found, install it (works on both macOS and Linux)
+  echo "Homebrew not found. Installing..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  if [ "$OS" = "Darwin" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   fi
   USE_BREW=true
-elif [ "$OS" = "Linux" ]; then
-  # Linux: let user choose
-  if command -v brew &>/dev/null; then
-    USE_BREW=true
-    echo "Detected Homebrew on Linux. Using brew."
-  else
-    echo ""
-    echo "=========================================="
-    echo "  Package Manager"
-    echo "=========================================="
-    echo ""
-    echo "  1) Homebrew (install Linuxbrew, consistent with macOS)"
-    echo "  2) System package manager ($(command -v apt-get &>/dev/null && echo "apt" || command -v dnf &>/dev/null && echo "dnf" || command -v pacman &>/dev/null && echo "pacman" || echo "unknown"))"
-    echo ""
-    printf "  Choose [1/2]: "
-    read -r choice
-    if [ "$choice" = "1" ]; then
-      echo ""
-      echo "Installing Homebrew for Linux..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      USE_BREW=true
-    fi
-  fi
 fi
 
 # Show interactive menu

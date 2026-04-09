@@ -4,23 +4,17 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-### macOS
-
 ```bash
+# Install Homebrew (macOS & Linux)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install chezmoi and apply dotfiles
 brew install chezmoi
 chezmoi init BarryYangi/chezmoi-dotfiles
 $(chezmoi source-path)/install.sh
 ```
 
-### Linux
-
-```bash
-sh -c "$(curl -fsLS get.chezmoi.io)"
-chezmoi init BarryYangi/chezmoi-dotfiles
-$(chezmoi source-path)/install.sh
-```
-
-The installer detects your OS and uses the appropriate package manager (brew / apt / dnf / pacman). It will install selected software and automatically apply their configs.
+Works on both **macOS** and **Linux**. The installer will let you choose which tools to install and automatically apply their configs.
 
 The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
 
@@ -84,10 +78,10 @@ chezmoi apply ~/.zshrc             # zsh only
 
 ## Supported Platforms
 
-- **macOS** - Full support (Homebrew)
-- **Linux** - apt (Ubuntu/Debian), dnf (Fedora), pacman (Arch)
+- **macOS** - Full support
+- **Linux** - Full support
 
-VS Code / Cursor config paths are automatically resolved per platform.
+Both platforms use [Homebrew](https://brew.sh/) as the unified package manager. VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 
