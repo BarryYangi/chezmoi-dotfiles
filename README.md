@@ -2,53 +2,25 @@
 
 My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
-## Prerequisites
-
-Install [Homebrew](https://brew.sh/) first, then install all dependencies:
-
-```bash
-# Core
-brew install chezmoi
-
-# Shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-brew install spaceship nvm
-
-# Spaceship prompt symlink
-ln -s "$(brew --prefix)/opt/spaceship/spaceship.zsh" \
-  "$HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
-
-# Zsh plugins
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-
-# Terminal Emulators
-brew install --cask ghostty
-brew install --cask kitty
-brew install --cask wezterm
-
-# Editors
-brew install neovim
-brew install --cask zed
-brew install --cask visual-studio-code
-brew install --cask cursor
-
-# CLI Tools
-brew install yazi fastfetch btop zellij
-brew install eza zoxide fzf
-brew install hub diff-so-fancy
-
-# Runtime
-brew install nvm bun
-```
-
 ## Quick Start
 
 ```bash
-# Apply dotfiles
+# Install chezmoi
+brew install chezmoi
+
+# Init and apply (auto-installs all dependencies on first run)
 chezmoi init BarryYangi/chezmoi-dotfiles
 chezmoi apply
 ```
+
+`chezmoi apply` will automatically install:
+
+- **Homebrew** (if not installed)
+- **Terminal Emulators** - Ghostty, Kitty, WezTerm
+- **Editors** - Neovim, Zed, VS Code, Cursor
+- **CLI Tools** - Yazi, Zellij, Fastfetch, Btop, eza, zoxide, fzf, etc.
+- **Runtime** - nvm, Bun
+- **Oh My Zsh** - with spaceship prompt, zsh-autosuggestions, zsh-syntax-highlighting
 
 ## What's Included
 
