@@ -7,6 +7,7 @@ set -e
 # ============================================
 OS="$(uname -s)"
 DISTRO=""
+USE_BREW=false
 
 if [ "$OS" = "Linux" ]; then
   if [ -f /etc/os-release ]; then
@@ -21,7 +22,7 @@ fi
 install_pkg() {
   local pkg="$1"
   echo "  Installing $pkg..."
-  if [ "$OS" = "Darwin" ]; then
+  if [ "$USE_BREW" = true ]; then
     brew install "$pkg" 2>/dev/null || true
   elif command -v apt-get &>/dev/null; then
     sudo apt-get install -y "$pkg" 2>/dev/null || true
@@ -34,19 +35,14 @@ install_pkg() {
   fi
 }
 
-install_cask() {
+install_gui() {
   local pkg="$1"
-  if [ "$OS" = "Darwin" ]; then
+  if [ "$USE_BREW" = true ]; then
     echo "  brew install --cask $pkg"
     brew install --cask "$pkg" 2>/dev/null || true
+  else
+    install_pkg "$pkg"
   fi
-  # Linux GUI apps handled in do_install with platform-specific methods
-}
-
-install_from_url() {
-  local name="$1" url="$2"
-  echo "  Installing $name from release..."
-  curl -fsSL "$url" | bash 2>/dev/null || true
 }
 
 # ============================================
@@ -178,8 +174,8 @@ select_packages() {
 # Oh My Zsh installer
 # ============================================
 install_omz() {
-  # Ensure zsh is installed on Linux
-  if [ "$OS" = "Linux" ] && ! command -v zsh &>/dev/null; then
+  # Ensure zsh is installed
+  if ! command -v zsh &>/dev/null; then
     echo "  Installing zsh..."
     install_pkg zsh
   fi
@@ -209,136 +205,41 @@ install_omz() {
 }
 
 # ============================================
-# Map index -> install command (OS-aware)
+# Map index -> install command
 # ============================================
 do_install() {
   local i=$1
   case $i in
-    0) install_omz ;;
-    1) # eza
-      if [ "$OS" = "Darwin" ]; then
-        brew install eza 2>/dev/null || true
-      else
-        install_pkg eza
-      fi
-      ;;
-    2) # zoxide
-      if [ "$OS" = "Darwin" ]; then
-        brew install zoxide 2>/dev/null || true
-      else
-        curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh 2>/dev/null || install_pkg zoxide
-      fi
-      ;;
-    3) # fzf
-      if [ "$OS" = "Darwin" ]; then
-        brew install fzf 2>/dev/null || true
-      else
-        install_pkg fzf
-      fi
-      ;;
-    4) # hub
-      if [ "$OS" = "Darwin" ]; then
-        brew install hub 2>/dev/null || true
-      else
-        install_pkg hub
-      fi
-      ;;
-    5) # diff-so-fancy
-      if [ "$OS" = "Darwin" ]; then
-        brew install diff-so-fancy 2>/dev/null || true
-      else
-        install_pkg diff-so-fancy
-      fi
-      ;;
-    6) # Ghostty
-      if [ "$OS" = "Darwin" ]; then
-        brew install --cask ghostty 2>/dev/null || true
-      else
-        echo "  Ghostty: Install from https://ghostty.org/download"
-        install_pkg ghostty 2>/dev/null || true
-      fi
-      ;;
-    7) # Kitty
-      if [ "$OS" = "Darwin" ]; then
-        brew install --cask kitty 2>/dev/null || true
-      else
-        curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin 2>/dev/null || install_pkg kitty
-      fi
-      ;;
-    8) # WezTerm
-      if [ "$OS" = "Darwin" ]; then
-        brew install --cask wezterm 2>/dev/null || true
-      else
-        install_pkg wezterm 2>/dev/null || echo "  WezTerm: Install from https://wezfurlong.org/wezterm/install/linux.html"
-      fi
-      ;;
-    9) # Neovim
-      if [ "$OS" = "Darwin" ]; then
-        brew install neovim 2>/dev/null || true
-      else
-        install_pkg neovim
-      fi
-      ;;
-    10) # Zed
-      if [ "$OS" = "Darwin" ]; then
-        brew install --cask zed 2>/dev/null || true
-      else
-        curl -f https://zed.dev/install.sh | sh 2>/dev/null || true
-      fi
-      ;;
-    11) # VS Code
-      if [ "$OS" = "Darwin" ]; then
-        brew install --cask visual-studio-code 2>/dev/null || true
-      else
-        install_pkg code 2>/dev/null || echo "  VS Code: Install from https://code.visualstudio.com/download"
-      fi
-      ;;
-    12) # Cursor
-      if [ "$OS" = "Darwin" ]; then
-        brew install --cask cursor 2>/dev/null || true
-      else
-        echo "  Cursor: Install from https://www.cursor.com/downloads"
-      fi
-      ;;
-    13) # Yazi
-      if [ "$OS" = "Darwin" ]; then
-        brew install yazi 2>/dev/null || true
-      else
-        cargo install --locked yazi-fm yazi-cli 2>/dev/null || install_pkg yazi
-      fi
-      ;;
-    14) # Zellij
-      if [ "$OS" = "Darwin" ]; then
-        brew install zellij 2>/dev/null || true
-      else
-        cargo install --locked zellij 2>/dev/null || install_pkg zellij
-      fi
-      ;;
-    15) # Fastfetch
-      if [ "$OS" = "Darwin" ]; then
-        brew install fastfetch 2>/dev/null || true
-      else
-        install_pkg fastfetch
-      fi
-      ;;
-    16) # Btop
-      if [ "$OS" = "Darwin" ]; then
-        brew install btop 2>/dev/null || true
-      else
-        install_pkg btop
-      fi
-      ;;
+    0)  install_omz ;;
+    1)  install_pkg eza ;;
+    2)  install_pkg zoxide ;;
+    3)  install_pkg fzf ;;
+    4)  install_pkg hub ;;
+    5)  install_pkg diff-so-fancy ;;
+    6)  install_gui ghostty ;;
+    7)  install_gui kitty ;;
+    8)  install_gui wezterm ;;
+    9)  install_pkg neovim ;;
+    10) install_gui zed ;;
+    11) install_gui visual-studio-code ;;
+    12) install_gui cursor ;;
+    13) install_pkg yazi ;;
+    14) install_pkg zellij ;;
+    15) install_pkg fastfetch ;;
+    16) install_pkg btop ;;
     17) # nvm
-      if [ "$OS" = "Darwin" ]; then
+      if [ "$USE_BREW" = true ]; then
         brew install nvm 2>/dev/null || true
       else
+        echo "  Installing nvm..."
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash 2>/dev/null || true
       fi
       ;;
-    18) # Bun
-      if [ "$OS" = "Darwin" ]; then
+    18) # bun
+      if [ "$USE_BREW" = true ]; then
         brew install bun 2>/dev/null || true
       else
+        echo "  Installing bun..."
         curl -fsSL https://bun.sh/install | bash 2>/dev/null || true
       fi
       ;;
@@ -352,20 +253,19 @@ get_config_paths() {
   local i=$1
   case $i in
     0)  echo "$HOME/.zshrc" ;;
-    # 1-5: shell tools, no config files
     6)  echo "$HOME/.config/ghostty" ;;
     7)  echo "$HOME/.config/kitty" ;;
     8)  echo "$HOME/.config/wezterm" ;;
     9)  echo "$HOME/.config/nvim" ;;
     10) echo "$HOME/.config/zed" ;;
-    11) # VS Code
+    11)
       if [ "$OS" = "Darwin" ]; then
         echo "$HOME/Library/Application Support/Code/User/settings.json"
       else
         echo "$HOME/.config/Code/User/settings.json"
       fi
       ;;
-    12) # Cursor
+    12)
       if [ "$OS" = "Darwin" ]; then
         echo "$HOME/Library/Application Support/Cursor/User/settings.json"
       else
@@ -376,7 +276,6 @@ get_config_paths() {
     14) echo "$HOME/.config/zellij" ;;
     15) echo "$HOME/.config/fastfetch" ;;
     16) echo "$HOME/.config/btop" ;;
-    # 17-18: runtime, no config files
   esac
 }
 
@@ -384,25 +283,50 @@ get_config_paths() {
 # Main
 # ============================================
 
-# Ensure Homebrew on macOS
+# Ensure basic tools
+for cmd in curl git; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "$cmd is required but not found. Please install it first."
+    exit 1
+  fi
+done
+
+# Package manager setup
 if [ "$OS" = "Darwin" ]; then
+  # macOS: always use Homebrew
   if ! command -v brew &>/dev/null; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
-fi
-
-# Ensure basic tools on Linux
-if [ "$OS" = "Linux" ]; then
-  for cmd in curl git; do
-    if ! command -v "$cmd" &>/dev/null; then
-      echo "Installing $cmd..."
-      install_pkg "$cmd"
+  USE_BREW=true
+elif [ "$OS" = "Linux" ]; then
+  # Linux: let user choose
+  if command -v brew &>/dev/null; then
+    USE_BREW=true
+    echo "Detected Homebrew on Linux. Using brew."
+  else
+    echo ""
+    echo "=========================================="
+    echo "  Package Manager"
+    echo "=========================================="
+    echo ""
+    echo "  1) Homebrew (install Linuxbrew, consistent with macOS)"
+    echo "  2) System package manager ($(command -v apt-get &>/dev/null && echo "apt" || command -v dnf &>/dev/null && echo "dnf" || command -v pacman &>/dev/null && echo "pacman" || echo "unknown"))"
+    echo ""
+    printf "  Choose [1/2]: "
+    read -r choice
+    if [ "$choice" = "1" ]; then
+      echo ""
+      echo "Installing Homebrew for Linux..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      USE_BREW=true
     fi
-  done
+  fi
 fi
 
+# Show interactive menu
 select_packages
 
 echo ""
