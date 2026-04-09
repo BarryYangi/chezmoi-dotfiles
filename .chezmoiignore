@@ -6,3 +6,6 @@
 
 # Logs
 .config/btop/btop.log
+
+# Repo files (only for GitHub, not for home directory)
+README.md
