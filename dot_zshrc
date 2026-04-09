@@ -1,6 +1,6 @@
 # OPENSPEC:START
 # OpenSpec shell completions configuration
-fpath=("/Users/barry/.oh-my-zsh/custom/completions" $fpath)
+fpath=("$HOME/.oh-my-zsh/custom/completions" $fpath)
 # OPENSPEC:END
 
 export ZSH="$HOME/.oh-my-zsh"
@@ -307,10 +307,10 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --color=spinner:#ff007c \
 "
 
-export PATH="/Users/barry/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # bun completions
-[ -s "/Users/barry/.bun/_bun" ] && source "/Users/barry/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

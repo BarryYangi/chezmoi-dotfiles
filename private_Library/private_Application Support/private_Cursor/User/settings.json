@@ -157,12 +157,6 @@
   "window.menuBarVisibility": "compact",
   "diffEditor.ignoreTrimWhitespace": false,
   "workbench.editor.empty.hint": "hidden",
-  // "vscode_custom_css.imports": [
-  //   "file:///E:/DEV_tools/codeConfig/index.js",
-  //   "file:///c:/Users/YangChentao/.vscode/extensions/brandonkirbyson.vscode-animations-2.0.1/dist/updateHandler.js"
-  // ],
-  "animations.Command-Palette": "Slide",
-  "animations.Scrolling": "Fade",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
