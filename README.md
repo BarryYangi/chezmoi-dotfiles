@@ -2,45 +2,83 @@
 
 My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
-## What's included
+## Prerequisites
 
-### Shell
+Install [Homebrew](https://brew.sh/) first, then install all dependencies:
 
-- **zsh** - Main shell config with oh-my-zsh, spaceship prompt, aliases, and functions
+```bash
+# Core
+brew install chezmoi
 
-### Terminal Emulators
+# Shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+brew install spaceship nvm
 
-- **Ghostty** - Primary terminal, with 26 custom shaders
-- **Kitty** - Backup terminal with Catppuccin theme
-- **WezTerm** - Lua-based terminal config
+# Spaceship prompt symlink
+ln -s "$(brew --prefix)/opt/spaceship/spaceship.zsh" \
+  "$HOME/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
 
-### Editors
+# Zsh plugins
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-- **Neovim** - AstroNvim setup with custom plugins (copilot, flash, snacks, etc.)
-- **Zed** - Settings and keymap
-- **VS Code** - Settings
-- **Cursor** - Settings
+# Terminal Emulators
+brew install --cask ghostty
+brew install --cask kitty
+brew install --cask wezterm
 
-### CLI Tools
+# Editors
+brew install neovim
+brew install --cask zed
+brew install --cask visual-studio-code
+brew install --cask cursor
 
-- **Yazi** - Terminal file manager with Catppuccin theme
-- **Zellij** - Terminal multiplexer with custom keybindings (vim + tmux style)
-- **Fastfetch** - System info display with custom logo
-- **Btop** - System monitor with Catppuccin theme
+# CLI Tools
+brew install yazi fastfetch btop zellij
+brew install eza zoxide fzf
+brew install hub diff-so-fancy
 
-### Other
-
-- **gitconfig** - Git global config
-- **bunfig.toml** - Bun package manager mirror config
-- **Claude** - Claude Code global instructions
+# Runtime
+brew install nvm bun
+```
 
 ## Quick Start
 
 ```bash
-# Install chezmoi and apply dotfiles
+# Apply dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
 chezmoi apply
 ```
+
+## What's Included
+
+### Shell
+
+- **zsh** - oh-my-zsh + spaceship prompt, git/node aliases, vim-style navigation
+
+### Terminal Emulators
+
+- **Ghostty** - Primary terminal with 26 custom shaders
+- **Kitty** - Catppuccin theme
+- **WezTerm** - Lua-based config
+
+### Editors
+
+- **Neovim** - AstroNvim with plugins (copilot, flash, snacks, telescope, etc.)
+- **Zed** - Settings and keymap
+- **VS Code / Cursor** - Shared settings
+
+### CLI Tools
+
+- **Yazi** - File manager with Catppuccin theme
+- **Zellij** - Terminal multiplexer (vim + tmux keybindings)
+- **Fastfetch** - System info with custom logo
+- **Btop** - System monitor with Catppuccin theme
+
+### Other
+
+- **bunfig.toml** - Bun npm mirror config (npmmirror.com)
+- **Claude** - Claude Code global instructions
 
 ## Update
 
