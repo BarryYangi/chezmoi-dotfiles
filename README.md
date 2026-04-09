@@ -11,12 +11,11 @@ brew install chezmoi
 # 2. Clone dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
 
-# 3. Install dependencies (interactive, pick what you need)
+# 3. Install & apply (interactive, pick what you need)
 $(chezmoi source-path)/install.sh
-
-# 4. Apply configs
-chezmoi apply
 ```
+
+The installer will install selected software and automatically apply their configs.
 
 The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
 
