@@ -4,23 +4,27 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-```bash
-# Install chezmoi
-brew install chezmoi
+### Install everything
 
-# Init and apply (auto-installs all dependencies on first run)
+```bash
+brew install chezmoi
 chezmoi init BarryYangi/chezmoi-dotfiles
+
+# Interactive installer - choose what to install
+$(chezmoi source-path)/install.sh
+
+# Apply all configs
 chezmoi apply
 ```
 
-`chezmoi apply` will automatically install:
+### Install selectively
 
-- **Homebrew** (if not installed)
-- **Terminal Emulators** - Ghostty, Kitty, WezTerm
-- **Editors** - Neovim, Zed, VS Code, Cursor
-- **CLI Tools** - Yazi, Zellij, Fastfetch, Btop, eza, zoxide, fzf, etc.
-- **Runtime** - nvm, Bun
-- **Oh My Zsh** - with spaceship prompt, zsh-autosuggestions, zsh-syntax-highlighting
+```bash
+# Apply only specific configs
+chezmoi apply ~/.config/ghostty
+chezmoi apply ~/.config/nvim
+chezmoi apply ~/.zshrc
+```
 
 ## What's Included
 
