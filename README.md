@@ -78,10 +78,10 @@ chezmoi apply ~/.zshrc             # zsh only
 
 ## Supported Platforms
 
-- **macOS** - Full support
-- **Linux** - Full support
+- **macOS** - Homebrew
+- **Linux** - Homebrew or system package manager (apt / dnf / pacman)
 
-Both platforms use [Homebrew](https://brew.sh/) as the unified package manager. VS Code / Cursor config paths are automatically resolved per platform.
+On Linux, the installer will ask you to choose between Homebrew (consistent with macOS) or your system's native package manager. VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 
