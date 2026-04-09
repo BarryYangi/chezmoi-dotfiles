@@ -4,26 +4,45 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-### Install everything
-
 ```bash
+# 1. Install chezmoi
 brew install chezmoi
+
+# 2. Clone dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
 
-# Interactive installer - choose what to install
+# 3. Install dependencies (interactive, pick what you need)
 $(chezmoi source-path)/install.sh
 
-# Apply all configs
+# 4. Apply configs
 chezmoi apply
 ```
 
-### Install selectively
+The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
+
+```
+── Shell ──────────────────────────────────────────
+▸ [●] oh-my-zsh       Shell framework + spaceship prompt + plugins
+  [●] eza             Modern ls replacement
+  [●] zoxide          Smart cd (z command)
+  [●] fzf             Fuzzy finder
+  ...
+── Terminal Emulators ─────────────────────────────
+  [●] Ghostty         GPU-accelerated terminal
+  [ ] Kitty           GPU-based terminal
+  ...
+
+  ↑↓ Move  ␣ Toggle  ⏎ Confirm  a All  n None
+```
+
+### Apply selectively
+
+You can also apply only specific configs without installing everything:
 
 ```bash
-# Apply only specific configs
-chezmoi apply ~/.config/ghostty
-chezmoi apply ~/.config/nvim
-chezmoi apply ~/.zshrc
+chezmoi apply ~/.config/ghostty    # Ghostty only
+chezmoi apply ~/.config/nvim       # Neovim only
+chezmoi apply ~/.zshrc             # zsh only
 ```
 
 ## What's Included
@@ -31,6 +50,9 @@ chezmoi apply ~/.zshrc
 ### Shell
 
 - **zsh** - oh-my-zsh + spaceship prompt, git/node aliases, vim-style navigation
+- **eza** - Modern ls replacement with icons
+- **zoxide** - Smart cd command
+- **fzf** - Fuzzy finder with Tokyo Night theme
 
 ### Terminal Emulators
 
