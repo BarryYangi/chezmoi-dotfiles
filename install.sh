@@ -195,6 +195,27 @@ do_install() {
   esac
 }
 
+# Map index -> chezmoi config paths to apply
+get_config_paths() {
+  local i=$1
+  case $i in
+    0)  echo "$HOME/.zshrc" ;;
+    # 1-5: shell tools, no config files
+    6)  echo "$HOME/.config/ghostty" ;;
+    7)  echo "$HOME/.config/kitty" ;;
+    8)  echo "$HOME/.config/wezterm" ;;
+    9)  echo "$HOME/.config/nvim" ;;
+    10) echo "$HOME/.config/zed" ;;
+    11) echo "$HOME/Library/Application Support/Code/User/settings.json" ;;
+    12) echo "$HOME/Library/Application Support/Cursor/User/settings.json" ;;
+    13) echo "$HOME/.config/yazi" ;;
+    14) echo "$HOME/.config/zellij" ;;
+    15) echo "$HOME/.config/fastfetch" ;;
+    16) echo "$HOME/.config/btop" ;;
+    # 17-18: runtime, no config files
+  esac
+}
+
 # ============================================
 # Main
 # ============================================
@@ -211,17 +232,37 @@ echo ""
 echo "Installing selected components..."
 
 INSTALLED=0
+CONFIG_PATHS=()
+
 for i in "${!LABELS[@]}"; do
   if [ "${SELECTED[$i]}" = true ]; then
     do_install "$i"
     ((INSTALLED++))
+
+    # Collect config paths
+    path=$(get_config_paths "$i")
+    [ -n "$path" ] && CONFIG_PATHS+=("$path")
   fi
 done
 
+# Apply configs
+if [ ${#CONFIG_PATHS[@]} -gt 0 ]; then
+  echo ""
+  echo "Applying configs..."
+  # Always apply shared configs
+  chezmoi apply "$HOME/.bunfig.toml" "$HOME/.hushlogin" "$HOME/.claude" 2>/dev/null || true
+  for path in "${CONFIG_PATHS[@]}"; do
+    echo "  chezmoi apply $path"
+    chezmoi apply "$path" 2>/dev/null || true
+  done
+fi
+
 echo ""
 if [ "$INSTALLED" -gt 0 ]; then
-  echo "Done! Now run 'chezmoi apply' to deploy config files."
-  echo "Or apply selectively: chezmoi apply ~/.config/ghostty"
+  echo "Done! Software installed and configs applied."
+  echo ""
+  echo "To apply all configs:  chezmoi apply"
+  echo "To re-run installer:   $(chezmoi source-path)/install.sh"
 else
   echo "Nothing selected. Run this script again to install components."
 fi
