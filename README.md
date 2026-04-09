@@ -4,18 +4,23 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
+### macOS
+
 ```bash
-# 1. Install chezmoi
 brew install chezmoi
-
-# 2. Clone dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
-
-# 3. Install & apply (interactive, pick what you need)
 $(chezmoi source-path)/install.sh
 ```
 
-The installer will install selected software and automatically apply their configs.
+### Linux
+
+```bash
+sh -c "$(curl -fsLS get.chezmoi.io)"
+chezmoi init BarryYangi/chezmoi-dotfiles
+$(chezmoi source-path)/install.sh
+```
+
+The installer detects your OS and uses the appropriate package manager (brew / apt / dnf / pacman). It will install selected software and automatically apply their configs.
 
 The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
 
@@ -76,6 +81,13 @@ chezmoi apply ~/.zshrc             # zsh only
 
 - **bunfig.toml** - Bun npm mirror config (npmmirror.com)
 - **Claude** - Claude Code global instructions
+
+## Supported Platforms
+
+- **macOS** - Full support (Homebrew)
+- **Linux** - apt (Ubuntu/Debian), dnf (Fedora), pacman (Arch)
+
+VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 

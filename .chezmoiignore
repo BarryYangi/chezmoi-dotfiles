@@ -10,3 +10,13 @@
 # Repo files (only for GitHub, not for home directory)
 README.md
 install.sh
+
+# OS-specific: VS Code / Cursor config paths
+{{ if eq .chezmoi.os "darwin" }}
+# On macOS, use ~/Library/Application Support/, ignore ~/.config/ paths
+.config/Code
+.config/Cursor
+{{ else }}
+# On Linux, use ~/.config/, ignore ~/Library/ paths
+Library
+{{ end }}

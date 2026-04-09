@@ -229,7 +229,11 @@ function serve() {
 }
 
 # homebrew
-export PATH=/opt/homebrew/bin:$PATH
+if [ -d "/opt/homebrew/bin" ]; then
+  export PATH=/opt/homebrew/bin:$PATH
+elif [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+  export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
+fi
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
