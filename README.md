@@ -4,85 +4,38 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-Recommended flow: install `chezmoi`, initialize this repo, then apply the dotfiles. This repo does not provide installer scripts. It is mainly a backup of my personal configuration, and software installation is expected to be guided manually or by an agent reading this README.
+Install `chezmoi` using the recommended method for your platform, then initialize this repo and apply the files you want. This repo does not provide installer scripts. It mainly exists as a backup of my personal configuration.
 
 ```bash
-# 1. Install chezmoi
-# macOS
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install chezmoi
-
-# Linux
-# Ubuntu/Debian (recommended: official installer, since chezmoi is not in all default apt repos)
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
-
-# If ~/.local/bin is not in PATH yet
-export PATH="$HOME/.local/bin:$PATH"
-
-# Fedora
-sudo dnf install chezmoi
-# Arch Linux
-sudo pacman -S chezmoi
-# openSUSE
-sudo zypper install chezmoi
-# Alpine
-sudo apk add chezmoi
-# Alternative for Ubuntu/Debian
-sudo snap install chezmoi --classic
-
-# 2. Initialize dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
-
-# 3. Apply all managed files
 chezmoi apply
 ```
 
-Works on both **macOS** and **Linux**. The simplest path is to install `chezmoi`, initialize the repo, and run `chezmoi apply`.
+Works on both **macOS** and **Linux**.
 
-### Agent Notes
+### Dependencies
 
-If an agent is setting up this repo on a machine:
+Install what is needed for the configs you actually plan to use:
 
-- Read this README first.
-- Ask the user which config groups they actually want before installing anything.
-- Detect the current platform.
-- Choose the package manager based on platform.
-- Install only the dependencies that are actually needed for the selected configs.
-- If the user selects `zsh`, install the zsh-related dependencies first.
-- After zsh dependencies are installed, set `zsh` as the default login shell:
-
-```bash
-chsh -s "$(command -v zsh)"
-```
-
-- Then start a zsh session:
-
-```bash
-exec zsh
-```
-
-- Treat GUI apps like terminal emulators and GUI editors as manual installs.
-
-### Recommended Dependencies
-
-These are the packages most directly related to the configs in this repo. Install what you actually need for the parts you plan to use:
-
-- Core: `chezmoi`, `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`
-- Shell and Git CLI: `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
-- CLI tools: `neovim`, `yazi`, `zellij`, `fastfetch`, `btop`, `mpv`, `mediainfo`, `unar`, `exiftool`
-- Runtime helpers: `nvm`, `bun`
+- Shell: `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
+- CLI tools: `neovim`, `yazi`, `zellij`, `fastfetch`, `btop`, `mpv`, `mediainfo`, `unar`, `exiftool`, `nvm`, `bun`
 - Fonts: `Maple Mono NF CN`, `Maple Mono NF`
+- Manual GUI apps: `ghostty`, `kitty`, `wezterm`, `zed`, `visual-studio-code`, `cursor`
 
-### Other Config Targets
+### Config Guide
 
-These configs exist in the repo, but they are manual installs:
-
-- Terminals: `ghostty`, `kitty`, `wezterm`
-- Editors: `zed`, `visual-studio-code`, `cursor`
+- `zsh`: shell aliases, prompt, completions, and daily CLI workflow. Depends on `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`, and optionally `nvm` and `bun`.
+- `neovim`: editor config based on AstroNvim. Depends on `neovim`.
+- `yazi`: file manager config. Depends on `yazi`, and works best with `mpv`, `mediainfo`, `unar`, and `exiftool`.
+- `zellij`: terminal multiplexer config. Depends on `zellij`.
+- `fastfetch`: system info config. Depends on `fastfetch`.
+- `btop`: system monitor config. Depends on `btop`.
+- `ghostty`, `kitty`, `wezterm`: terminal emulator configs. Install the app manually first, then apply the matching config.
+- `zed`, `visual-studio-code`, `cursor`: editor configs. Install the app manually first, then apply the matching config.
 
 ### Apply selectively
 
-You can apply only specific configs without installing everything:
+You can apply only specific configs:
 
 ```bash
 chezmoi apply ~/.config/ghostty    # Ghostty only
@@ -92,36 +45,11 @@ chezmoi apply ~/.zshrc             # zsh only
 
 ## What's Included
 
-### Shell
-
-- **zsh** - oh-my-zsh + spaceship prompt, git/node aliases, vim-style navigation
-- **eza** - Modern ls replacement with icons
-- **zoxide** - Smart cd command
-- **fzf** - Fuzzy finder with Tokyo Night theme
-
-### Terminal Emulators
-
-- **Ghostty** - Primary terminal with 26 custom shaders
-- **Kitty** - Catppuccin theme
-- **WezTerm** - Lua-based config
-
-### Editors
-
-- **Neovim** - AstroNvim with plugins (copilot, flash, snacks, telescope, etc.)
-- **Zed** - Settings and keymap
-- **VS Code / Cursor** - Shared settings
-
-### CLI Tools
-
-- **Yazi** - File manager with Catppuccin theme
-- **Zellij** - Terminal multiplexer (vim + tmux keybindings)
-- **Fastfetch** - System info with custom logo
-- **Btop** - System monitor with Catppuccin theme
-
-### Other
-
-- **bunfig.toml** - Bun npm mirror config (npmmirror.com)
-- **Claude** - Claude Code global instructions
+- Shell: zsh, aliases, prompt, completions
+- Terminals: Ghostty, Kitty, WezTerm
+- Editors: Neovim, Zed, VS Code, Cursor
+- CLI tools: Yazi, Zellij, Fastfetch, Btop
+- Other: bun config, Claude Code instructions
 
 ## Supported Platforms
 
@@ -139,3 +67,16 @@ chezmoi re-add
 # Push to remote
 chezmoi cd && git add -A && git commit -m "update" && git push
 ```
+
+## Agent Notes
+
+If an agent is setting up this repo on a machine:
+
+- Read this README first.
+- Ask the user which config groups they actually want before installing anything.
+- Detect the current platform.
+- Choose the package manager based on platform.
+- Install only the dependencies that are actually needed for the selected configs.
+- If the user selects `zsh`, install the zsh-related dependencies first.
+- After zsh dependencies are installed, make zsh the default login shell and continue the setup in a zsh session.
+- Treat GUI apps like terminal emulators and GUI editors as manual installs.
