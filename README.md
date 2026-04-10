@@ -18,15 +18,16 @@ Works on both **macOS** and **Linux**.
 Install what is needed for the configs you actually plan to use:
 
 - Shell: `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
-- CLI tools: `neovim`, `yazi`, `zellij`, `fastfetch`, `btop`, `mpv`, `mediainfo`, `unar`, `exiftool`, `nvm`, `bun`
+- CLI tools: `nvim` (package name may be `neovim`), `yazi`, `zellij`, `fastfetch`, `btop`, `nvm`, `bun`
+- Optional Yazi extras: `mpv`, `mediainfo`, `unar`, `exiftool`
 - Fonts: `Maple Mono NF CN`, `Maple Mono NF`
 - Manual GUI apps: `ghostty`, `kitty`, `wezterm`, `zed`, `visual-studio-code`, `cursor`
 
 ### Config Guide
 
 - `zsh`: shell aliases, prompt, completions, and daily CLI workflow. Depends on `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`, and optionally `nvm` and `bun`.
-- `neovim`: editor config based on AstroNvim. Depends on `neovim`.
-- `yazi`: file manager config. Depends on `yazi`, and works best with `mpv`, `mediainfo`, `unar`, and `exiftool`.
+- `nvim`: editor config based on AstroNvim. Depends on the `nvim` command, which may be packaged as `neovim`.
+- `yazi`: file manager config. Depends on `yazi`. `mpv`, `mediainfo`, `unar`, and `exiftool` are optional extras for opener and preview integrations.
 - `zellij`: terminal multiplexer config. Depends on `zellij`.
 - `fastfetch`: system info config. Depends on `fastfetch`.
 - `btop`: system monitor config. Depends on `btop`.
@@ -39,7 +40,7 @@ You can apply only specific configs:
 
 ```bash
 chezmoi apply ~/.config/ghostty    # Ghostty only
-chezmoi apply ~/.config/nvim       # Neovim only
+chezmoi apply ~/.config/nvim       # nvim only
 chezmoi apply ~/.zshrc             # zsh only
 ```
 
@@ -47,7 +48,7 @@ chezmoi apply ~/.zshrc             # zsh only
 
 - Shell: zsh, aliases, prompt, completions
 - Terminals: Ghostty, Kitty, WezTerm
-- Editors: Neovim, Zed, VS Code, Cursor
+- Editors: nvim, Zed, VS Code, Cursor
 - CLI tools: Yazi, Zellij, Fastfetch, Btop
 - Other: bun config, Claude Code instructions
 
