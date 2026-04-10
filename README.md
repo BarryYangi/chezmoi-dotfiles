@@ -4,7 +4,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-Recommended flow: install `chezmoi`, initialize this repo, install the tools you want manually, then apply only the configs you want.
+Recommended flow: install `chezmoi`, initialize this repo, then apply the dotfiles. Software dependencies can be installed separately with the platform-specific bootstrap commands below.
 
 ```bash
 # 1. Install chezmoi
@@ -33,13 +33,64 @@ sudo snap install chezmoi --classic
 # 2. Initialize dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
 
-# 3. Apply only what you want
-chezmoi apply ~/.zshrc
-chezmoi apply ~/.config/ghostty
-chezmoi apply ~/.config/nvim
+# 3. Apply all managed files
+chezmoi apply
 ```
 
-Works on both **macOS** and **Linux**. After `chezmoi init`, install software dependencies separately with your system package manager, then apply only the files you actually want on that machine.
+Works on both **macOS** and **Linux**. The simplest path is to install `chezmoi`, initialize the repo, and run `chezmoi apply`. If you want a faster new-machine setup for your own use, use one of the bootstrap command blocks below first.
+
+### Bootstrap Commands
+
+These are convenience commands for your own machines. They install the common tools used by this dotfiles repo, set up oh-my-zsh and its plugins, then initialize and apply chezmoi. They are intentionally explicit and live in the README instead of a maintained installer script.
+
+#### macOS
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
+eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)" && \
+brew tap homebrew/cask-fonts && \
+brew install chezmoi gh hub fzf zoxide eza diff-so-fancy neovim yazi zellij fastfetch btop mpv mediainfo unar exiftool nvm bun && \
+brew install --cask ghostty kitty wezterm zed visual-studio-code cursor font-maple-mono-nf-cn font-maple-mono-nf font-annotation-mono && \
+if [ ! -d "$HOME/.oh-my-zsh" ]; then RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; fi && \
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}" && \
+[ -d "$ZSH_CUSTOM/themes/spaceship-prompt" ] || git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" && \
+ln -sf "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" && \
+[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" && \
+[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" && \
+chezmoi init BarryYangi/chezmoi-dotfiles && \
+chezmoi apply
+```
+
+#### Ubuntu / Debian
+
+```bash
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" && \
+export PATH="$HOME/.local/bin:$PATH" && \
+sudo apt update && \
+sudo apt install -y curl git zsh gh hub fzf zoxide neovim zellij fastfetch btop mpv mediainfo unar libimage-exiftool-perl kitty && \
+if [ ! -d "$HOME/.oh-my-zsh" ]; then RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; fi && \
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}" && \
+[ -d "$ZSH_CUSTOM/themes/spaceship-prompt" ] || git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" && \
+ln -sf "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" && \
+[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" && \
+[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" && \
+chezmoi init BarryYangi/chezmoi-dotfiles && \
+chezmoi apply
+```
+
+Ubuntu/Debian usually still needs some manual extras, depending on distro packages and how closely you want to match the macOS setup:
+
+- `eza`
+- `yazi`
+- `diff-so-fancy`
+- `ghostty`
+- `wezterm`
+- `zed`
+- `visual-studio-code`
+- `cursor`
+- `Maple Mono NF CN`
+- `Maple Mono NF`
+- `Annotation Mono`
 
 ### Recommended Packages
 
