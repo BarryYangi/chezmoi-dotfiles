@@ -4,7 +4,10 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
+Recommended flow: install `chezmoi`, initialize this repo, then run the interactive installer script.
+
 ```bash
+# 1. Install chezmoi
 # macOS
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install chezmoi
@@ -20,12 +23,14 @@ sudo zypper install chezmoi
 # or
 sudo apk add chezmoi
 
-# Apply dotfiles
+# 2. Initialize dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
+
+# 3. Run the installer (recommended)
 bash "$(chezmoi source-path)/install.sh"
 ```
 
-Works on both **macOS** and **Linux**. The installer lets you choose which tools to install and automatically applies their configs. On Linux it uses the detected native package manager directly.
+Works on both **macOS** and **Linux**. The recommended entrypoint after `chezmoi init` is the installer script above; it lets you choose which tools to install and automatically applies their configs. On Linux it uses the detected native package manager directly.
 
 The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
 
