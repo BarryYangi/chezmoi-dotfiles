@@ -61,10 +61,10 @@ run_root_cmd() {
 detect_sys_pm() {
   if command -v apt-get >/dev/null 2>&1; then
     echo "apt"
-  elif command -v dnf >/dev/null 2>&1; then
-    echo "dnf"
   elif command -v pacman >/dev/null 2>&1; then
     echo "pacman"
+  elif command -v dnf >/dev/null 2>&1; then
+    echo "dnf"
   elif command -v zypper >/dev/null 2>&1; then
     echo "zypper"
   elif command -v apk >/dev/null 2>&1; then

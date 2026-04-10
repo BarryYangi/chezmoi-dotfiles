@@ -48,10 +48,10 @@ If an agent is setting up this repo on a machine:
 - Use `scripts/bootstrap-macos.sh` on macOS.
 - Use `scripts/bootstrap-linux.sh` on Linux.
 - `bootstrap-macos.sh` uses Homebrew.
-- `bootstrap-linux.sh` auto-detects the system package manager, with primary support for Ubuntu/Debian (`apt`) and Arch Linux (`pacman`).
+- `bootstrap-linux.sh` auto-detects the system package manager, preferring Ubuntu/Debian (`apt`) first and Arch Linux (`pacman`) second.
 - `dnf`, `zypper`, and `apk` are best-effort fallbacks only.
 - These scripts are for personal bootstrap only. They intentionally install only the base shell experience, CLI tools, `neovim`, `nvm`, `bun`, and Maple Mono fonts.
-- They do **not** install heavier GUI software such as editors or terminal emulators.
+- They do **not** install heavier GUI software such as terminal emulators or GUI editors.
 
 ### Bootstrap Scripts
 
@@ -67,7 +67,7 @@ bash ./scripts/bootstrap-macos.sh
 bash ./scripts/bootstrap-linux.sh
 ```
 
-The Linux script auto-detects `apt`, `pacman`, `dnf`, `zypper`, or `apk`. It is maintained primarily for Ubuntu/Debian and Arch Linux. Other distros are best-effort only, and unavailable packages should warn and continue.
+The Linux script auto-detects `apt`, `pacman`, `dnf`, `zypper`, or `apk`, and prefers `apt` first, then `pacman`. It is maintained primarily for Ubuntu/Debian and Arch Linux. Other distros are best-effort only, and unavailable packages should warn and continue.
 
 ### Bootstrap Installs
 
@@ -132,9 +132,9 @@ chezmoi apply ~/.zshrc             # zsh only
 ## Supported Platforms
 
 - **macOS** - Homebrew
-- **Linux** - system package manager (apt / dnf / pacman / zypper / apk)
+- **Linux** - system package manager, primarily `apt` and `pacman`, with `dnf` / `zypper` / `apk` as best-effort fallbacks
 
-Some GUI apps may still need manual installation if your distro does not package them. VS Code / Cursor config paths are automatically resolved per platform.
+Some GUI apps still need manual installation by design. VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 
