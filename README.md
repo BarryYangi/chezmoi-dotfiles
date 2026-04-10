@@ -44,25 +44,24 @@ Works on both **macOS** and **Linux**. The simplest path is to install `chezmoi`
 If an agent is setting up this repo on a machine:
 
 - Read this README first.
+- Ask the user which config groups they actually want before installing anything.
 - Detect the current platform.
-- Choose the package manager based on platform:
-  `macOS` uses `brew`.
-  `Linux` should prefer `apt` on Ubuntu/Debian and `pacman` on Arch Linux.
-  `dnf`, `zypper`, and `apk` are best-effort fallbacks only.
-- Install only the dependencies that are actually needed for the configs being applied.
-- Treat GUI apps like terminal emulators and GUI editors as manual installs.
+- Choose the package manager based on platform.
+- Install only the dependencies that are actually needed for the selected configs.
+- If the user selects `zsh`, install the zsh-related dependencies first.
+- After zsh dependencies are installed, set `zsh` as the default login shell:
 
-After dependency installation, start a zsh session with:
+```bash
+chsh -s "$(command -v zsh)"
+```
+
+- Then start a zsh session:
 
 ```bash
 exec zsh
 ```
 
-Do not run `source ~/.zshrc` from `bash`. If you want zsh to be the default login shell, run:
-
-```bash
-chsh -s "$(command -v zsh)"
-```
+- Treat GUI apps like terminal emulators and GUI editors as manual installs.
 
 ### Recommended Dependencies
 
