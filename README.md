@@ -23,6 +23,22 @@ Install what is needed for the configs you actually plan to use:
 - Fonts: `Maple Mono NF CN`, `Maple Mono NF`
 - Manual GUI apps: `ghostty`, `kitty`, `wezterm`, `zed`, `visual-studio-code`, `cursor`
 
+### Recommended Modern CLI Extras
+
+- `bat` for `cat`
+- `fd` for `find`
+- `rg` for `grep`
+- `eza` for `ls`
+- `zoxide` for smarter `cd`
+- `btop` for `top`
+- `jq` for JSON processing
+- `tldr` for concise command examples
+- `diff-so-fancy` for cleaner `git diff`
+- `lazygit` for a terminal Git UI
+- `uv` for modern Python package and project management
+
+Worth considering if you want to swap parts of the stack later: `delta` as a fuller diff viewer, and `fnm` as a lighter/faster alternative to `nvm`.
+
 ### Config Guide
 
 - `zsh`: shell aliases, prompt, completions, and daily CLI workflow. Depends on `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`, and optionally `nvm` and `bun`.
