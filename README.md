@@ -4,7 +4,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-Recommended flow: install `chezmoi`, initialize this repo, then apply the dotfiles. For faster setup on your own machines, use the platform-specific bootstrap scripts in [`scripts/`](./scripts).
+Recommended flow: install `chezmoi`, initialize this repo, then apply the dotfiles. This repo does not provide installer scripts. It is mainly a backup of my personal configuration, and software installation is expected to be guided manually or by an agent reading this README.
 
 ```bash
 # 1. Install chezmoi
@@ -45,33 +45,28 @@ If an agent is setting up this repo on a machine:
 
 - Read this README first.
 - Detect the current platform.
-- Use `scripts/bootstrap-macos.sh` on macOS.
-- Use `scripts/bootstrap-linux.sh` on Linux.
-- `bootstrap-macos.sh` uses Homebrew.
-- `bootstrap-linux.sh` auto-detects the system package manager, preferring Ubuntu/Debian (`apt`) first and Arch Linux (`pacman`) second.
-- `dnf`, `zypper`, and `apk` are best-effort fallbacks only.
-- These scripts are for personal bootstrap only. They intentionally install only the base shell experience, CLI tools, `neovim`, `nvm`, `bun`, and Maple Mono fonts.
-- They do **not** install heavier GUI software such as terminal emulators or GUI editors.
+- Choose the package manager based on platform:
+  `macOS` uses `brew`.
+  `Linux` should prefer `apt` on Ubuntu/Debian and `pacman` on Arch Linux.
+  `dnf`, `zypper`, and `apk` are best-effort fallbacks only.
+- Install only the dependencies that are actually needed for the configs being applied.
+- Treat GUI apps like terminal emulators and GUI editors as manual installs.
 
-### Bootstrap Scripts
-
-#### macOS
+After dependency installation, start a zsh session with:
 
 ```bash
-bash ./scripts/bootstrap-macos.sh
+exec zsh
 ```
 
-#### Linux
+Do not run `source ~/.zshrc` from `bash`. If you want zsh to be the default login shell, run:
 
 ```bash
-bash ./scripts/bootstrap-linux.sh
+chsh -s "$(command -v zsh)"
 ```
 
-The Linux script auto-detects `apt`, `pacman`, `dnf`, `zypper`, or `apk`, and prefers `apt` first, then `pacman`. It is maintained primarily for Ubuntu/Debian and Arch Linux. Other distros are best-effort only, and unavailable packages should warn and continue.
+### Recommended Dependencies
 
-### Bootstrap Installs
-
-These are the packages the bootstrap scripts are intended to install because they are directly related to the shell experience and CLI configs in this repo:
+These are the packages most directly related to the configs in this repo. Install what you actually need for the parts you plan to use:
 
 - Core: `chezmoi`, `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`
 - Shell and Git CLI: `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
@@ -81,7 +76,7 @@ These are the packages the bootstrap scripts are intended to install because the
 
 ### Other Config Targets
 
-These configs exist in the repo, but the bootstrap scripts intentionally do **not** install them:
+These configs exist in the repo, but they are manual installs:
 
 - Terminals: `ghostty`, `kitty`, `wezterm`
 - Editors: `zed`, `visual-studio-code`, `cursor`
@@ -134,7 +129,7 @@ chezmoi apply ~/.zshrc             # zsh only
 - **macOS** - Homebrew
 - **Linux** - system package manager, primarily `apt` and `pacman`, with `dnf` / `zypper` / `apk` as best-effort fallbacks
 
-Some GUI apps still need manual installation by design. VS Code / Cursor config paths are automatically resolved per platform.
+This repo does not try to automate software installation. VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 

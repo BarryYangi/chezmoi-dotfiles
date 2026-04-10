@@ -1,3 +1,10 @@
+# This config is for zsh only. If it gets sourced from bash, exit early
+# with a clear message instead of letting oh-my-zsh fail noisily.
+if [ -n "${BASH_VERSION:-}" ]; then
+  echo "This file is for zsh. Start zsh with: exec zsh"
+  return 0 2>/dev/null || exit 0
+fi
+
 # OPENSPEC:START
 # OpenSpec shell completions configuration
 fpath=("$HOME/.oh-my-zsh/custom/completions" $fpath)
