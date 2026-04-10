@@ -4,7 +4,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-Recommended flow: install `chezmoi`, initialize this repo, then run the interactive installer script.
+Recommended flow: install `chezmoi`, initialize this repo, install the tools you want manually, then apply only the configs you want.
 
 ```bash
 # 1. Install chezmoi
@@ -33,32 +33,28 @@ sudo snap install chezmoi --classic
 # 2. Initialize dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
 
-# 3. Run the installer (recommended)
-bash "$(chezmoi source-path)/install.sh"
+# 3. Apply only what you want
+chezmoi apply ~/.zshrc
+chezmoi apply ~/.config/ghostty
+chezmoi apply ~/.config/nvim
 ```
 
-Works on both **macOS** and **Linux**. The recommended entrypoint after `chezmoi init` is the installer script above; it lets you choose which tools to install and automatically applies their configs. On Linux it uses the detected native package manager directly.
+Works on both **macOS** and **Linux**. After `chezmoi init`, install software dependencies separately with your system package manager, then apply only the files you actually want on that machine.
 
-The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
+### Recommended Packages
 
-```
-── Shell ──────────────────────────────────────────
-▸ [●] oh-my-zsh       Shell framework + spaceship prompt + plugins
-  [●] eza             Modern ls replacement
-  [●] zoxide          Smart cd (z command)
-  [●] fzf             Fuzzy finder
-  ...
-── Terminal Emulators ─────────────────────────────
-  [●] Ghostty         GPU-accelerated terminal
-  [ ] Kitty           GPU-based terminal
-  ...
+Install these manually if you want the related configs and aliases to work as intended:
 
-  ↑↓ Move  ␣ Toggle  ⏎ Confirm  a All  n None
-```
+- Shell: `zsh`, `oh-my-zsh`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
+- Terminals: `ghostty`, `kitty`, `wezterm`
+- Editors: `neovim`, `zed`, `visual-studio-code`, `cursor`
+- CLI tools: `yazi`, `zellij`, `fastfetch`, `btop`, `mpv`, `mediainfo`, `unar`, `exiftool`
+- Runtime: `nvm`, `bun`
+- Fonts: `Maple Mono NF CN`, `Maple Mono NF`, `Annotation Mono`
 
 ### Apply selectively
 
-You can also apply only specific configs without installing everything:
+You can apply only specific configs without installing everything:
 
 ```bash
 chezmoi apply ~/.config/ghostty    # Ghostty only
@@ -104,7 +100,7 @@ chezmoi apply ~/.zshrc             # zsh only
 - **macOS** - Homebrew
 - **Linux** - system package manager (apt / dnf / pacman / zypper / apk)
 
-On Linux, the installer no longer bootstraps Homebrew and instead uses the detected native package manager directly. Some GUI apps may still need manual installation if your distro does not package them. VS Code / Cursor config paths are automatically resolved per platform.
+Some GUI apps may still need manual installation if your distro does not package them. VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 
