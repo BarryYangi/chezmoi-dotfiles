@@ -4,7 +4,7 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Start
 
-Recommended flow: install `chezmoi`, initialize this repo, then apply the dotfiles. Software dependencies can be installed separately with the platform-specific bootstrap commands below.
+Recommended flow: install `chezmoi`, initialize this repo, then apply the dotfiles. For faster setup on your own machines, use the platform-specific bootstrap scripts in [`scripts/`](./scripts).
 
 ```bash
 # 1. Install chezmoi
@@ -37,71 +37,54 @@ chezmoi init BarryYangi/chezmoi-dotfiles
 chezmoi apply
 ```
 
-Works on both **macOS** and **Linux**. The simplest path is to install `chezmoi`, initialize the repo, and run `chezmoi apply`. If you want a faster new-machine setup for your own use, use one of the bootstrap command blocks below first.
+Works on both **macOS** and **Linux**. The simplest path is to install `chezmoi`, initialize the repo, and run `chezmoi apply`.
 
-### Bootstrap Commands
+### Agent Notes
 
-These are convenience commands for your own machines. They install the common tools used by this dotfiles repo, set up oh-my-zsh and its plugins, then initialize and apply chezmoi. They are intentionally explicit and live in the README instead of a maintained installer script.
+If an agent is setting up this repo on a machine:
+
+- Read this README first.
+- Detect the current platform.
+- Use `scripts/bootstrap-macos.sh` on macOS.
+- Use `scripts/bootstrap-linux.sh` on Linux.
+- `bootstrap-macos.sh` uses Homebrew.
+- `bootstrap-linux.sh` auto-detects the system package manager, with primary support for Ubuntu/Debian (`apt`) and Arch Linux (`pacman`).
+- `dnf`, `zypper`, and `apk` are best-effort fallbacks only.
+- These scripts are for personal bootstrap only. They intentionally install only the base shell experience, CLI tools, `neovim`, `nvm`, `bun`, and Maple Mono fonts.
+- They do **not** install heavier GUI software such as editors or terminal emulators.
+
+### Bootstrap Scripts
 
 #### macOS
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)" && \
-brew tap homebrew/cask-fonts && \
-brew install chezmoi gh hub fzf zoxide eza diff-so-fancy neovim yazi zellij fastfetch btop mpv mediainfo unar exiftool nvm bun && \
-brew install --cask ghostty kitty wezterm zed visual-studio-code cursor font-maple-mono-nf-cn font-maple-mono-nf font-annotation-mono && \
-if [ ! -d "$HOME/.oh-my-zsh" ]; then RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; fi && \
-ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}" && \
-[ -d "$ZSH_CUSTOM/themes/spaceship-prompt" ] || git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" && \
-ln -sf "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" && \
-[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" && \
-[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" && \
-chezmoi init BarryYangi/chezmoi-dotfiles && \
-chezmoi apply
+bash ./scripts/bootstrap-macos.sh
 ```
 
-#### Ubuntu / Debian
+#### Linux
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" && \
-export PATH="$HOME/.local/bin:$PATH" && \
-sudo apt update && \
-sudo apt install -y curl git zsh gh hub fzf zoxide neovim zellij fastfetch btop mpv mediainfo unar libimage-exiftool-perl kitty && \
-if [ ! -d "$HOME/.oh-my-zsh" ]; then RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; fi && \
-ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}" && \
-[ -d "$ZSH_CUSTOM/themes/spaceship-prompt" ] || git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" && \
-ln -sf "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme" && \
-[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" && \
-[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" && \
-chezmoi init BarryYangi/chezmoi-dotfiles && \
-chezmoi apply
+bash ./scripts/bootstrap-linux.sh
 ```
 
-Ubuntu/Debian usually still needs some manual extras, depending on distro packages and how closely you want to match the macOS setup:
+The Linux script auto-detects `apt`, `pacman`, `dnf`, `zypper`, or `apk`. It is maintained primarily for Ubuntu/Debian and Arch Linux. Other distros are best-effort only, and unavailable packages should warn and continue.
 
-- `eza`
-- `yazi`
-- `diff-so-fancy`
-- `ghostty`
-- `wezterm`
-- `zed`
-- `visual-studio-code`
-- `cursor`
-- `Maple Mono NF CN`
-- `Maple Mono NF`
-- `Annotation Mono`
+### Bootstrap Installs
 
-### Recommended Packages
+These are the packages the bootstrap scripts are intended to install because they are directly related to the shell experience and CLI configs in this repo:
 
-Install these manually if you want the related configs and aliases to work as intended:
+- Core: `chezmoi`, `zsh`, `oh-my-zsh`, `spaceship-prompt`, `zsh-autosuggestions`, `zsh-syntax-highlighting`
+- Shell and Git CLI: `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
+- CLI tools: `neovim`, `yazi`, `zellij`, `fastfetch`, `btop`, `mpv`, `mediainfo`, `unar`, `exiftool`
+- Runtime helpers: `nvm`, `bun`
+- Fonts: `Maple Mono NF CN`, `Maple Mono NF`
 
-- Shell: `zsh`, `oh-my-zsh`, `gh`, `hub`, `fzf`, `zoxide`, `eza`, `diff-so-fancy`
+### Other Config Targets
+
+These configs exist in the repo, but the bootstrap scripts intentionally do **not** install them:
+
 - Terminals: `ghostty`, `kitty`, `wezterm`
-- Editors: `neovim`, `zed`, `visual-studio-code`, `cursor`
-- CLI tools: `yazi`, `zellij`, `fastfetch`, `btop`, `mpv`, `mediainfo`, `unar`, `exiftool`
-- Runtime: `nvm`, `bun`
-- Fonts: `Maple Mono NF CN`, `Maple Mono NF`, `Annotation Mono`
+- Editors: `zed`, `visual-studio-code`, `cursor`
 
 ### Apply selectively
 
