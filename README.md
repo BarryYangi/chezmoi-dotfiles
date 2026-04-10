@@ -5,16 +5,27 @@ My personal dotfiles, managed with [chezmoi](https://www.chezmoi.io/).
 ## Quick Start
 
 ```bash
-# Install Homebrew (macOS & Linux)
+# macOS
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install chezmoi and apply dotfiles
 brew install chezmoi
+
+# Linux (choose the command that matches your distro)
+sudo apt install chezmoi
+# or
+sudo dnf install chezmoi
+# or
+sudo pacman -S chezmoi
+# or
+sudo zypper install chezmoi
+# or
+sudo apk add chezmoi
+
+# Apply dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
-$(chezmoi source-path)/install.sh
+bash "$(chezmoi source-path)/install.sh"
 ```
 
-Works on both **macOS** and **Linux**. The installer will let you choose which tools to install and automatically apply their configs.
+Works on both **macOS** and **Linux**. The installer lets you choose which tools to install and automatically applies their configs. On Linux it uses the detected native package manager directly.
 
 The installer provides an interactive menu — use arrow keys to navigate, space to toggle, enter to confirm:
 
@@ -79,9 +90,9 @@ chezmoi apply ~/.zshrc             # zsh only
 ## Supported Platforms
 
 - **macOS** - Homebrew
-- **Linux** - Homebrew or system package manager (apt / dnf / pacman)
+- **Linux** - system package manager (apt / dnf / pacman / zypper / apk)
 
-On Linux, the installer will ask you to choose between Homebrew (consistent with macOS) or your system's native package manager. VS Code / Cursor config paths are automatically resolved per platform.
+On Linux, the installer no longer bootstraps Homebrew and instead uses the detected native package manager directly. Some GUI apps may still need manual installation if your distro does not package them. VS Code / Cursor config paths are automatically resolved per platform.
 
 ## Update
 

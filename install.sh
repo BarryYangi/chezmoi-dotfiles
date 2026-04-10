@@ -8,6 +8,7 @@ set -e
 OS="$(uname -s)"
 DISTRO=""
 USE_BREW=false
+PACKAGE_MANAGER=""
 
 if [ "$OS" = "Linux" ]; then
   if [ -f /etc/os-release ]; then
@@ -19,27 +20,92 @@ fi
 # ============================================
 # Install helpers
 # ============================================
-install_pkg() {
+resolve_linux_pkg() {
   local pkg="$1"
-  echo "  Installing $pkg..."
-  if [ "$USE_BREW" = true ]; then
-    brew install "$pkg" 2>/dev/null || true
-  elif command -v apt-get &>/dev/null; then
-    sudo apt-get install -y "$pkg" 2>/dev/null || true
-  elif command -v dnf &>/dev/null; then
-    sudo dnf install -y "$pkg" 2>/dev/null || true
-  elif command -v pacman &>/dev/null; then
-    sudo pacman -S --noconfirm "$pkg" 2>/dev/null || true
-  else
-    echo "  ⚠ No supported package manager found, skipping $pkg"
+
+  case "$PACKAGE_MANAGER:$pkg" in
+    apt:visual-studio-code|dnf:visual-studio-code|pacman:visual-studio-code|zypper:visual-studio-code|apk:visual-studio-code)
+      echo "code"
+      ;;
+    pacman:ghostty)
+      echo "ghostty"
+      ;;
+    *:cursor|*:zed)
+      echo ""
+      ;;
+    apt:ghostty|dnf:ghostty|zypper:ghostty|apk:ghostty)
+      echo ""
+      ;;
+    *)
+      echo "$pkg"
+      ;;
+  esac
+}
+
+install_pkg() {
+  local requested_pkg="$1"
+  local pkg="$requested_pkg"
+
+  if [ "$OS" = "Linux" ] && [ "$USE_BREW" = false ]; then
+    pkg="$(resolve_linux_pkg "$requested_pkg")"
+    if [ -z "$pkg" ]; then
+      echo "  ⚠ $requested_pkg is not available for automatic install via $PACKAGE_MANAGER. Install it manually if needed."
+      return
+    fi
   fi
+
+  if [ "$pkg" = "$requested_pkg" ]; then
+    echo "  Installing $requested_pkg..."
+  else
+    echo "  Installing $requested_pkg ($pkg)..."
+  fi
+
+  if [ "$USE_BREW" = true ]; then
+    if ! brew install "$pkg"; then
+      echo "  ⚠ Failed to install $requested_pkg with Homebrew."
+    fi
+    return
+  fi
+
+  case "$PACKAGE_MANAGER" in
+    apt)
+      if ! sudo apt-get install -y "$pkg"; then
+        echo "  ⚠ Failed to install $requested_pkg with apt."
+      fi
+      ;;
+    dnf)
+      if ! sudo dnf install -y "$pkg"; then
+        echo "  ⚠ Failed to install $requested_pkg with dnf."
+      fi
+      ;;
+    pacman)
+      if ! sudo pacman -S --noconfirm "$pkg"; then
+        echo "  ⚠ Failed to install $requested_pkg with pacman."
+      fi
+      ;;
+    zypper)
+      if ! sudo zypper install -y "$pkg"; then
+        echo "  ⚠ Failed to install $requested_pkg with zypper."
+      fi
+      ;;
+    apk)
+      if ! sudo apk add "$pkg"; then
+        echo "  ⚠ Failed to install $requested_pkg with apk."
+      fi
+      ;;
+    *)
+      echo "  ⚠ No supported package manager found, skipping $requested_pkg"
+      ;;
+  esac
 }
 
 install_gui() {
   local pkg="$1"
   if [ "$USE_BREW" = true ]; then
     echo "  brew install --cask $pkg"
-    brew install --cask "$pkg" 2>/dev/null || true
+    if ! brew install --cask "$pkg"; then
+      echo "  ⚠ Failed to install $pkg with Homebrew cask."
+    fi
   else
     install_pkg "$pkg"
   fi
@@ -296,41 +362,35 @@ detect_sys_pm() {
   if command -v apt-get &>/dev/null; then echo "apt"
   elif command -v dnf &>/dev/null; then echo "dnf"
   elif command -v pacman &>/dev/null; then echo "pacman"
+  elif command -v zypper &>/dev/null; then echo "zypper"
+  elif command -v apk &>/dev/null; then echo "apk"
   else echo "unknown"
   fi
 }
 
-if command -v brew &>/dev/null; then
-  USE_BREW=true
-elif [ "$OS" = "Darwin" ]; then
-  echo "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-  USE_BREW=true
+if [ "$OS" = "Darwin" ]; then
+  if command -v brew &>/dev/null; then
+    USE_BREW=true
+  else
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    USE_BREW=true
+  fi
 else
-  # Linux without brew: let user choose
-  SYS_PM="$(detect_sys_pm)"
+  PACKAGE_MANAGER="$(detect_sys_pm)"
+  if [ "$PACKAGE_MANAGER" = "unknown" ]; then
+    echo "No supported Linux package manager found. Supported: apt, dnf, pacman, zypper, apk."
+    exit 1
+  fi
+
   echo ""
   echo "=========================================="
   echo "  Package Manager"
   echo "=========================================="
   echo ""
-  echo "  1) Homebrew  (cross-platform, latest versions, consistent with macOS)"
-  echo "  2) $SYS_PM        (system native, faster install, smaller footprint)"
+  echo "  Linux detected. Using native package manager: $PACKAGE_MANAGER"
   echo ""
-  printf "  Choose [1/2] (default: 1): "
-  read -r choice
-  if [ "$choice" = "2" ]; then
-    USE_BREW=false
-    echo ""
-    echo "  Using $SYS_PM."
-  else
-    echo ""
-    echo "  Installing Homebrew for Linux..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    USE_BREW=true
-  fi
 fi
 
 # Show interactive menu
