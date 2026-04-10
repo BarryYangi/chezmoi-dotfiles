@@ -12,16 +12,23 @@ Recommended flow: install `chezmoi`, initialize this repo, then run the interact
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install chezmoi
 
-# Linux (choose the command that matches your distro)
-sudo apt install chezmoi
-# or
+# Linux
+# Ubuntu/Debian (recommended: official installer, since chezmoi is not in all default apt repos)
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+
+# If ~/.local/bin is not in PATH yet
+export PATH="$HOME/.local/bin:$PATH"
+
+# Fedora
 sudo dnf install chezmoi
-# or
+# Arch Linux
 sudo pacman -S chezmoi
-# or
+# openSUSE
 sudo zypper install chezmoi
-# or
+# Alpine
 sudo apk add chezmoi
+# Alternative for Ubuntu/Debian
+sudo snap install chezmoi --classic
 
 # 2. Initialize dotfiles
 chezmoi init BarryYangi/chezmoi-dotfiles
