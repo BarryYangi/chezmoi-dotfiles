@@ -201,9 +201,11 @@
   "gitlens.views.commitDetails.files.layout": "tree",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "application.shellEnvironmentResolutionTimeout": 30,
-  "update.mode": "silentlyApplyOnQuit",
   "cursor.general.glassShowWarningNotifications": true,
   "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "cursor.general.emailPrivacyEnabled": true,
+  "cursor.general.fontSmoothingAntialiased": true,
+  "window.autoDetectColorScheme": false,
   // "editor.tokenColorCustomizations": {
   //   "textMateRules": [
   //     {

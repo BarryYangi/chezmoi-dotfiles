@@ -275,6 +275,7 @@ alias cc="hapi claude"
 alias ccd="hapi claude --dangerously-skip-permissions"
 alias ccp="claude --dangerously-skip-permissions -p"
 alias ccu="bunx ccusage@latest"
+alias ccuc="npx @ccusage/codex@latest"
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -319,3 +320,13 @@ export PATH="$HOME/.local/bin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/barry/.local/bin:$PATH"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
