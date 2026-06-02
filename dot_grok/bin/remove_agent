@@ -1,0 +1,1 @@
+# Keep the generic `agent` command unbound; use `grok` or `gagent` instead.

@@ -1,0 +1,1 @@
+# Keep the generic `agent` command unbound; use `cursor agent` or `cagent` instead.
