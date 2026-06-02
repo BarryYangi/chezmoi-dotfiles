@@ -330,3 +330,7 @@ export PATH="$HOME/.grok/bin:$PATH"
 fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C
 # <<< grok installer <<<
+
+# Explicit AI agent command shortcuts. Keep the generic `agent` command unbound.
+alias cagent='cursor agent'
+alias gagent='grok'
